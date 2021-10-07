@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
  
-import validator from 'validator'
+
 
 const { Schema, model} = mongoose;
-const {isEmail} = 'validator'
+
 
 const deliveryInfo = {
     street:String,
@@ -16,17 +16,15 @@ const deliveryInfo = {
 
 const userSchema = new Schema(
     {
-        name : {
+        firstName : {
             type: String,
             required:true,
         },
-        email : {
+        lastName : {
             type: String,
-            required:[true,'Please enter an email'],
-            unique:true,
-            lowercase:true,
-            validate : [isEmail, 'Please enter a valid email'],
+            required:true,
         },
+       
         address : deliveryInfo,
        
         account: {
