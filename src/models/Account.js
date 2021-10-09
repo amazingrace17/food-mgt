@@ -3,7 +3,7 @@ import validator from 'validator'
 
 const {isEmail} = validator
 
-const { Schema, model} = mongoose,
+const { Schema, model} = mongoose
 
 const accountSchema = new Schema(
     {

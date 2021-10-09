@@ -1,12 +1,11 @@
-import {validationrResult} from' express-validator';
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
 import crypto from 'crypto'
 
-import {User} from '../models/user'
-import { Account} from '../models/account'
-import {Seller} from '../models/seller'
+import { User } from '../models/User.js'
+import { Account } from '../models/Account.js'
+import { Seller } from '../models/Seller.js'
 import { validationResult } from 'express-validator';
 
 
@@ -59,6 +58,6 @@ const AuthController = {
         })
 
     }
-    
-
 }
+
+export default AuthController;
