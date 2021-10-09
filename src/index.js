@@ -1,5 +1,5 @@
 import app from './server.js';
-import dbConnection from './database/dbconn.js';
+import dbConnection from './db.js';
 const port = process.env.PORT || 7000;
 
 dbConnection.getConnect();
