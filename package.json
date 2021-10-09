@@ -10,13 +10,9 @@
     "start": "node ./src/index.js",
     "tcov": "npm run test -- --coverage --coverageReporters=text"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/tonyfrenzy/food-mgt.git"
-  },
+  "type": "module",
   "author": "",
   "license": "ISC",
-  "type": "module",
   "dependencies": {
     "bcrypt": "^5.0.1",
     "cloudinary": "^1.26.3",
