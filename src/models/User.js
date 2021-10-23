@@ -1,50 +1,49 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
+import validator from 'validator';
 
 const { Schema, model } = mongoose;
+const { isEmail, isInt } = validator;
 
-const deliveryInfo = {
-  street:String,
-  locality:String,
-  aptName:String,
-  phoneNo: Number,
-  lat: Number,
-  lng:Number,
-};
-
-const userSchema = new Schema(
-  {
-    firstName : {
-      type: String,
-      required:true,
-    },
-    lastName : {
-      type: String,
-      required:true,
-    },
-    
-    address : deliveryInfo,
-    
-    account: {
-      type: Schema.Types.ObjectId, 
-      required: true,
-      ref : 'Account'
-    },
-    cart:{
-      items: [
-        {
-          _id:false,
-          itemsId : {
-            type:Schema.Types.ObjectId,
-            ref : 'Item',
-            required:true,
-          },
-          quantity:{type:Number, required : true},
-        },
-      ],
-    },
-
+const userSchema = new Schema({
+  firstname: {
+    type: String,
+    required: true,
+    trim: true
   },
-  {timestamps: true}
+  lastname: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  username: {
+    type: String,
+    required: [true, 'Please enter a username'],
+    unique: true,
+    lowercase: true,
+    trim: true
+  },
+  email: {
+    type: String,
+    required: [true, 'Please enter an email'],
+    unique: true,
+    lowercase: true,
+    validate: [isEmail, 'Please enter a valid email'],
+    trim: true
+  },
+  phone: {
+    type: String,
+    required: [true, 'Please enter a phone number'],
+    unique: true,
+    validate: [isInt, 'Please enter a valid email'],
+    trim: true
+  },
+  password: {
+    type: String,
+    required: [true, 'Please enter a password']
+  },
+  profileImg: String
+},
+  { timestamps: true }
 );
 
-export const User = model('user', userSchema)
+export const User = model('user', userSchema);
