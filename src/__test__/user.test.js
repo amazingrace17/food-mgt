@@ -169,10 +169,10 @@ describe("GET /users/:id", () => {
                           .set('Content-Type', 'application/json')
                           .send(userMock.loginData);
 
-      const { _id, token } = user.body.data;
+      const { _id: id, token } = user.body.data;
 
       const response = await request
-                                .get('/users/' + _id)
+                                .get('/users/' + id)
                                 .set('Authorization', token)
 
       expect(response.statusCode).toBe(200);
@@ -193,10 +193,10 @@ describe("GET /users/:id", () => {
                           .set('Content-Type', 'application/json')
                           .send(userMock.usernameLoginData);
                           
-      const { _id, token } = user.body.data;
+      const { _id: id, token } = user.body.data;
 
       const response = await request
-                                .get('/users/' + _id)
+                                .get('/users/' + id)
                                 .set('Authorization', token)
           
       expect(response.statusCode).toBe(200);
