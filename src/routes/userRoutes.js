@@ -1,9 +1,16 @@
 import { Router } from 'express';
-import AuthController from '../controllers/AuthController.js';
+import cors from 'cors';
+import UserController from '../controllers/UserController.js';
+import authValidator from '../middlewares/AuthValidator.js';
 
 const router = Router();
 
 router.route('/register')
-      .post(AuthController.signupUser);
+    .post(UserController.register);
+router.route('/login')
+    .post(UserController.login);
+router.route('/:id')
+    .get(authValidator, UserController.profile)
+    ;
 
 export default router;
