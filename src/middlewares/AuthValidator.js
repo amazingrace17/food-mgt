@@ -48,8 +48,10 @@ const authValidator = async(req, res, next) => {
     // Add user's details to the req object for all protected routes
     req.user = {
       id: decodedToken.user._id,
-      username: decodedToken.user.username
-      // isAdmin: decodedToken.user.isAdmin
+      username: decodedToken.user.username,
+      role: decodedToken.user.role,
+      isSeller: decodedToken.user.role === 'seller',
+      isAdmin: decodedToken.user.role === 'admin'
     };
 
     // If all things pass, allow user proceed

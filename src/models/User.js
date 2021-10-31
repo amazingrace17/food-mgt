@@ -34,12 +34,23 @@ const userSchema = new Schema({
     type: String,
     required: [true, 'Please enter a phone number'],
     unique: true,
-    validate: [isInt, 'Please enter a valid email'],
+    validate: [isInt, 'Please enter a valid phone number'],
     trim: true
   },
   password: {
     type: String,
     required: [true, 'Please enter a password']
+  },
+  role: {
+    type: String,
+    enum: ['admin', 'seller', 'normal'],
+    default: 'normal'
+  },
+  accountVerifyToken: String,
+  accountVerifyTokenExpiration: Date,
+  isVerified: {
+    type: Boolean,
+    default: false,
   },
   profileImg: String
 },
