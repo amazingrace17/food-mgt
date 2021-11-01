@@ -1,12 +1,23 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import crypto from 'crypto';
 
 import { User } from '../models/User.js';
 
 dotenv.config();
 
 const UserController = {
+  generateSha256Hash: async (userEmail) => {
+    const sha256Hash = crypto.createHash('sha256');
+    const r = (Math.random() + 1).toString(36).substring(2);
+
+    const data = sha256Hash.update(userEmail + r, 'utf-8');
+    const gen_hash = data.digest('hex');
+    
+    return gen_hash;
+  },
+  
   register: async (req, res) => {
     const reqBody = req.body;
     const { username, firstname, lastname, email, phone, password, confirmPassword } = req.body;
@@ -56,9 +67,11 @@ const UserController = {
 
       if(hash) {
         // create vericiation token
+        let verificationToken = await UserController.generateSha256Hash(email);
+
         // add to newUser
         // send Verification token
-        const newUser = new User({ firstname, lastname, username, email, phone, password: hash });
+        const newUser = new User({ firstname, lastname, username, email, phone, password: hash, accountVerifyToken: verificationToken });
         const savedUser = await newUser.save();
 
         if(savedUser) {
