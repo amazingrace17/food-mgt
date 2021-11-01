@@ -37,6 +37,11 @@ const userSchema = new Schema({
     validate: [isInt, 'Please enter a valid email'],
     trim: true
   },
+  account: {
+    type: Schema.Types.ObjectId, 
+    required: true,
+    ref : 'Account'
+  },
   password: {
     type: String,
     required: [true, 'Please enter a password']

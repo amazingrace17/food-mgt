@@ -18,9 +18,9 @@ const accountSchema = new Schema(
           type: String,
           required:[true,'Please enter a password']
       },
-      role: {
+      access: {
         type: String,
-        enum: ["ROLE_USER", "ROLE_ADMIN", "ROLE_SELLER"],
+        enum: ["user", "admin", "seller"],
         required: true,
       },
       accountVerifyToken: String,

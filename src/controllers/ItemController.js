@@ -1,11 +1,13 @@
+
 import {Category} from '../models/Category'
 import { Item } from '../models/Item'
-import { Seller } from '../models/Seller';
+import { Seller } from '../models/Seller'; 
+import { Account } from '../models/Account';
 
 const ItemController = {
     createCategory: async (req,res) =>{
         const {name, description, access} = req.body;
-        if(!access||access!=='admin'|| access!=="seller"){
+        if(!access||access!=='admin'|| access!=='seller'){
             return res.status(401).json({status:fail, message : Unauthorized});
         }
         if(!name || description){
@@ -30,6 +32,19 @@ const ItemController = {
         
     }
 },
+
+getCategory: async (req, res) => {
+    try {
+      const categories = await Category.find({}).lean().exec();
+      return res
+        .status(201)
+        .json({ status: 'success', message: 'successful', data: categories });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ status: 'fail', message: 'server err', err });
+    }
+  },
 
     editCategory: async(req, res) =>{
         const {id: _id} = req.params
@@ -67,7 +82,7 @@ const ItemController = {
     createItem: async(req, res) =>{
         const {name, description, category, itemImage, price, access} = req.body;
 
-        if(!access ||access!==admin || access!== vendor){
+        if(!access ||access!== 'admin' || access!== 'seller'){
             return res
             .status(400)
             .json({ status:'fail', message : 'Users can not upload products'})
@@ -152,5 +167,50 @@ const ItemController = {
             })
 
         }
+    },
+
+    createOrder : async(req,res) =>{
+        const {userId, items, bill} = req.body;
+        if(!userId || !items || !bill){
+            return res 
+            .status(400)
+            .json({status: 'fail', message : 'something went wrong'});
+
+
+        }
+        return res
+        .status(201)
+        .json({
+            status:'success' , message: 'succesful', data: order
+        })
+    },
+
+    getOrder : async(req,res) =>{
+        const Page_size = 20;
+        let page = 1;
+        let skip;
+        if (req.query.page){
+            page = Number(req.query.page);
+            skip= (page -1 ) * Page_size;
+        }
+        try{
+            const order=  await Order. find({}).populate().lean().exec();
+            const docCount = await Order.find({}).countDocuments();
+            return res.status(201).json({
+                status: ' success',
+                message : 'successful',
+                data : order, 
+                documentCount:docCount,
+                totalPages : Math.ceil(docCount/Page_size),
+                nextPage: Math.ceil(docCount/Page_size) > page ? `${page + 1}` : null,
+            });
+        }
+        catch(err){
+            return res
+            .status(500)
+            .json({status : 'fail', message : 'server err', err})
+        }
     }
 }
+
+export default ItemController;
