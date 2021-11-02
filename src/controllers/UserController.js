@@ -55,9 +55,9 @@ const UserController = {
       const hash = bcrypt.hashSync(password, salt);
 
       if(hash) {
-        // create vericiation token
-        // add to newUser
-        // send Verification token
+        // ✅ create vericiation token
+        // ✅ add to newUser
+        // ❌ send Verification token
         const newUser = new User({ firstname, lastname, username, email, phone, password: hash });
         const savedUser = await newUser.save();
 
