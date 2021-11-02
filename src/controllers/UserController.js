@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
 import { User } from '../models/User.js';
+// import MailService from '../services/MailService.js';
 
 dotenv.config();
 
@@ -58,6 +59,7 @@ const UserController = {
         // ✅ create vericiation token
         // ✅ add to newUser
         // ❌ send Verification token
+        MailService.sendMail();
         const newUser = new User({ firstname, lastname, username, email, phone, password: hash });
         const savedUser = await newUser.save();
 
