@@ -53,7 +53,6 @@ const authValidator = async(req, res, next) => {
       isVerified: decodedToken.user.isVerified
     };
 
-    // If all things pass, allow user proceed
     next();
     
   } catch (error) {

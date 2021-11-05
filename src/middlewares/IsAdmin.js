@@ -1,11 +1,13 @@
 
-const IsVerified = async(req, res, next) => {
+const IsAdmin = async(req, res, next) => {
   // Always combine with AuthValidator to access req.user
   try {
-    if (!req.user.isVerified) {
+    console.log(req.user);
+    
+    if (!req.user.role === 'admin') {
         return res.status(401).json({ 
             status: "failed", 
-            message: "unauthorized: verified users access only"
+            message: "unauthorized: admins access only"
         });
     }
 
@@ -18,4 +20,4 @@ const IsVerified = async(req, res, next) => {
   }
 };
 
-export default IsVerified;
+export default IsAdmin;
