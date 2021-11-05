@@ -1,13 +1,13 @@
 
-import {Category} from '../models/Category'
-import { Item } from '../models/Item'
-import { Seller } from '../models/Seller'; 
-import { Account } from '../models/Account';
+import {Category} from '../models/Category.js'
+import {Item} from '../models/Item.js'
+import { Seller } from '../models/Seller.js'; 
+
 
 const ItemController = {
     createCategory: async (req,res) =>{
         const {name, description, access} = req.body;
-        if(!access||access!=='admin'|| access!=='seller'){
+        if(!role ||access!=='admin'|| access!=='seller'){
             return res.status(401).json({status:fail, message : Unauthorized});
         }
         if(!name || description){
@@ -82,7 +82,7 @@ getCategory: async (req, res) => {
     createItem: async(req, res) =>{
         const {name, description, category, itemImage, price, access} = req.body;
 
-        if(!access ||access!== 'admin' || access!== 'seller'){
+        if(!access){
             return res
             .status(400)
             .json({ status:'fail', message : 'Users can not upload products'})

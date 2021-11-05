@@ -26,7 +26,7 @@ const itemSchema = new Schema({
         type:Number,
     },
     creator:{
-        type: Schema.Ttpes.ObjectId,
+        type: Schema.Types.ObjectId,
         ref:'Seller',
         required:true,
     },

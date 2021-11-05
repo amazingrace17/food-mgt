@@ -11,7 +11,7 @@ const categorySchema = new Schema({
     description:{
         type:String
     },
-    
-}, {timestamps:true}),
+     
+}, {timestamps:true});
 
 export const Category = model ('category',categorySchema)  
