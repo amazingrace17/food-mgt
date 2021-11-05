@@ -50,11 +50,9 @@ const authValidator = async(req, res, next) => {
       id: decodedToken.user._id,
       username: decodedToken.user.username,
       role: decodedToken.user.role,
-      isSeller: decodedToken.user.role === 'seller',
-      isAdmin: decodedToken.user.role === 'admin'
+      isVerified: decodedToken.user.isVerified
     };
 
-    // If all things pass, allow user proceed
     next();
     
   } catch (error) {
