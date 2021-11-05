@@ -7,7 +7,8 @@ const userMock = {
       email: "johndoe@test.com",
       phone: "07023456789",
       password: "johndoe123",
-      confirmPassword: "johndoe123"
+      confirmPassword: "johndoe123",
+      role: "normal",
     },
     incompleteRequiredData: {
       firstname: "John",

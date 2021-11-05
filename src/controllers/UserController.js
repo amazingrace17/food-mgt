@@ -21,8 +21,8 @@ const UserController = {
   
   register: async (req, res) => {
     const reqBody = req.body;
-    const { username, firstname, lastname, email, phone, password, confirmPassword } = req.body;
-    const reqFields = ['username', 'firstname', 'lastname', 'email', 'phone', 'password', 'confirmPassword'];
+    const { username, firstname, lastname, email, phone, password, confirmPassword, role } = req.body;
+    const reqFields = ['username', 'firstname', 'lastname', 'email', 'phone', 'password', 'confirmPassword', 'role'];
 
     try {
       if(password !== confirmPassword) {
@@ -54,7 +54,7 @@ const UserController = {
         }
       }
 
-      if (!firstname || !lastname || !username || !email || !phone || !password || !confirmPassword) {
+      if (!firstname || !lastname || !username || !email || !phone || !password || !confirmPassword || !role) {
         return res
           .status(400).json({ 
             status: 'failed', 
@@ -70,7 +70,7 @@ const UserController = {
         // ✅ create vericiation token
         let verificationToken = await UserController.generateSha256Hash(email);
         // ✅ add to newUser
-        const newUser = new User({ firstname, lastname, username, email, phone, password: hash, accountVerifyToken: verificationToken });
+        const newUser = new User({ firstname, lastname, username, email, phone, role, password: hash, accountVerifyToken: verificationToken });
         const savedUser = await newUser.save();
 
         if(savedUser) {
@@ -96,6 +96,8 @@ const UserController = {
                   username: savedUser.username,
                   email: savedUser.email,
                   phone: savedUser.phone,
+                  role: savedUser.role,
+                  verifyToken: savedUser.accountVerifyToken,
                   token: "Bearer " + token
                 },
                 message: 'user registration successful'
@@ -109,6 +111,66 @@ const UserController = {
         status: "failed",
         error
       })
+    }
+  },
+
+  verifyUser: async (req, res) => {
+    const { id, token } = req.params;
+    const user = await User.findById(id).select(["-password", "-email", "-phone", "-role"]);
+    
+
+    if(!user) {
+      return res.status(404).json({ 
+        status: "failed", 
+        message: "user not found" 
+      });
+    }
+    
+    if(user.isVerified) {
+      return res.status(410).json({ 
+        status: "failed", 
+        message: "invalid token: user is already verified" 
+      });
+    }
+    if(!token || token !== user.accountVerifyToken  /* || accountVerifyTokenExpiration isExpired */) {
+      return res.status(405).json({ 
+        status: "failed", 
+        message: "invalid verification token" 
+      });
+    }
+
+    try {
+      if (token === user.accountVerifyToken) {
+        
+        user.isVerified = true;
+        user.accountVerifyToken = '';
+        user.accountVerifyTokenExpiration = '';
+        user.save();
+
+        return res.status(200).json({
+          status: 'success',
+          message: "successful verification", 
+          data: {
+            _id: user._id, 
+            firstname: user.firstname, 
+            lastname: user.lastname, 
+            username: user.username, 
+            isVerified: user.isVerified,
+            verifyToken: user.accountVerifyToken,
+            verifyTokenExpiration: user.accountVerifyTokenExpiration
+          }
+        })
+      }
+
+      return res.status(405).json({ 
+        status: "failed", 
+        message: "verification not successful" 
+      });
+    } catch (error) {
+      return res.status(500).json({ 
+        status: "failed", 
+        message: error.message 
+      });
     }
   },
 
@@ -147,11 +209,11 @@ const UserController = {
       }
 
       // Payload to be sent in token
-      const { _id, firstname, lastname, username, isAdmin } = existingUser;
+      const { _id, firstname, lastname, username, isVerified, role } = existingUser;
 
       const payload = {
         user: {
-          _id, firstname, lastname, username, isAdmin
+          _id, firstname, lastname, username, isVerified, role
         }
       }
 
@@ -168,9 +230,9 @@ const UserController = {
 
       return res.status(200).json({
         status: 'success',
-        message: "login successful",       
+        message: "login successful", 
         data: {
-          _id, firstname, lastname, username, isAdmin, 
+          _id, firstname, lastname, username, role, isVerified, 
           email: existingUser.email,
           token: `Bearer ${token}`
         }
