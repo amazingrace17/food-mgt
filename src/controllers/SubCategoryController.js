@@ -1,26 +1,27 @@
-import { Category } from '../models/Category.js';
+import { SubCategory } from '../models/SubCategory.js';
 
-const CategoryController = {
-  createCategory: async (req, res) => {
-    const { name, description } = req.body;
+const SubCategoryController = {
+  createSubCategory: async (req, res) => {
+    const { name, description, category } = req.body;
 
     try {
-      if (!name || !description) {
+      if (!name || !description || !category) {
         return res
           .status(400)
           .json({ status: 'fail', message: 'Please fill all fields' });
       }
 
-      const newCategory = new Category(req.body);
-      const category = await newCategory.save();
-      if (!category) {
+      const newSubCategory = new SubCategory(req.body);
+
+      const subcategory = await newSubCategory.save();
+      if (!subcategory) {
         return res
           .status(400)
           .json({ status: 'fail', message: 'something went wrong' });
       }
       return res
         .status(201)
-        .json({ status: 'success', message: 'Category added successfully', data: category });
+        .json({ status: 'success', message: 'Subcategory added successfully', data: subcategory });
     } catch (err) {
       return res
         .status(500)
@@ -28,12 +29,12 @@ const CategoryController = {
     }
   },
 
-  getCategories: async (req, res) => {
+  getSubCategories: async (req, res) => {
     try {
-      const categories = await Category.find({}).lean().exec();
+      const categories = await SubCategory.find({}).lean().exec();
       return res
         .status(200)
-        .json({ status: 'success', message: 'Categories retrieved', data: categories });
+        .json({ status: 'success', message: 'Subcategories retrieved', data: categories });
     } catch (err) {
       return res
         .status(500)
@@ -41,11 +42,11 @@ const CategoryController = {
     }
   },
 
-  getCategoryById: async (req, res) => {
-    const categoryId = req.params.id;
+  getSubCategoryById: async (req, res) => {
+    const subcategoryId = req.params.id;
 
     try {
-    const category = await Category.findById(categoryId);
+    const category = await SubCategory.findById(subcategoryId);
     if (category) {
     return res
         .status(200)
@@ -53,7 +54,7 @@ const CategoryController = {
     }
     return res
         .status(404)
-        .json({ status: 'fail', message: 'category not found' });
+        .json({ status: 'fail', message: 'subcategory not found' });
     
     } catch (err) {
     return res
@@ -62,35 +63,35 @@ const CategoryController = {
     }
   },
 
-  updateCategory: async (req, res) => {
-    const categoryId = req.params.id;
+  updateSubCategory: async (req, res) => {
+    const subcategoryId = req.params.id;
     const { name, description } = req.body;
 
     // Check if there's at least one information to update
     if(![ name, description ].some(Boolean)) {
       return res.status(400).json({
-        status: "Failed", message: "All fields cannot be blank to update category"
+        status: "Failed", message: "All fields cannot be blank to update subcategory"
       })
     }
 
     try {
-      const category = await Category.findByIdAndUpdate(
-        categoryId,
+      const subcategory = await SubCategory.findByIdAndUpdate(
+        subcategoryId,
         req.body,
         { new: true }
       );
       
       // If server error occurs OR no matching id was found
-      if(!category) {
+      if(!subcategory) {
         return res.status(404).json({ 
-          status: "Failed", message: "Error updating category"
+          status: "Failed", message: "Error updating subcategory"
         });
       }
       
       return res.status(200).json({ 
         status: "Success", 
-        message: "Category updated successfully", 
-        data: category
+        message: "Subcategory updated successfully", 
+        data: subcategory
       });
 
     } catch (error) {
@@ -101,23 +102,23 @@ const CategoryController = {
     }
   },
 
-  deleteCategory: async(req,res)=>{
-    const categoryId = req.params.id;
+  deleteSubCategory: async(req,res)=>{
+    const subcategoryId = req.params.id;
       
     try {
-      const deletedCategory = await Category.findByIdAndRemove(categoryId);
+      const deletedSubCategory = await SubCategory.findByIdAndRemove(subcategoryId);
 
-      if (deletedCategory) {
+      if (deletedSubCategory) {
         return res
           .status(200)
           .json({
-            status: "success", message: "Category deleted"
+            status: "success", message: "Subcategory deleted"
         });
       }
 
       return res
           .status(404)
-          .json({ status: 'fail', message: 'category not found' });
+          .json({ status: 'fail', message: 'subcategory not found' });
         
     } catch (error) {
         res.status(400).send(error.reason={msg: "id not found"});
@@ -125,4 +126,4 @@ const CategoryController = {
   }
 }
 
-export default CategoryController;
+export default SubCategoryController;
