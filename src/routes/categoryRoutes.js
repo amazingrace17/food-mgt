@@ -8,11 +8,11 @@ const router = Router();
 
 router.route('/')
     .get(CategoryController.getCategories)
-    .post([authValidator/* , isAdmin */], CategoryController.createCategory)
+    .post([authValidator, isAdmin], CategoryController.createCategory)
     ;
 router.route('/:id')
     .get(CategoryController.getCategoryById)
-    .put([authValidator/* , isAdmin */], CategoryController.updateCategory)
-    .delete([authValidator/* , isAdmin */], CategoryController.deleteCategory);
+    .put([authValidator, isAdmin], CategoryController.updateCategory)
+    .delete([authValidator, isAdmin], CategoryController.deleteCategory);
 
 export default router;

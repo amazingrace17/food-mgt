@@ -13,36 +13,35 @@ afterAll(async () => await dbHandler.disconnectDB());
 
 let user = 
 beforeEach(async () => {
+
+  // Register User as AN ADMIN
+  userMock.completeData.role = 'admin';
   const newUser = await request
     .post('/users/register')
     .set('Content-Type', 'application/json')
     .send(userMock.completeData)
     ;
-    // console.log('newUser.body.data', newUser.body.data);
-  
   const { id: userId, verifyToken } = newUser.body.data;
 
-  // Verify account
+  // Verify Account
   const verifiedUser = await request
     .post('/users/'+ userId +'/verify/'+ verifyToken )
     .set('Content-Type', 'application/json')
     ;
-    const { _id: verifiedUserId } = verifiedUser.body.data;
-    // console.log(verifiedUserId, 'verifiedUser.body.data', verifiedUser.body.data);
 
-  // Login attempt on creating account
+  // Log Into Account
   user = await request
     .post('/users/login')
     .set('Content-Type', 'application/json')
     .send(userMock.loginData)
     ;
-    // console.log(user.body.data);
 
   return user;
 });
 
 describe('GET /categories/', () => {
   it('should get a list of categories', async () => {
+
     const { token } = user.body.data;
     const response = await request
       .get('/categories/')
@@ -74,63 +73,12 @@ describe('GET /categories/:id', () => {
 
 describe("POST /categories/", () => {
   it("should add a new category", async () => {
-    // // Make 'user' an Admin User
-    // user.body.data.role = 'admin';
 
-    // // Create a new Admin User
-    // let admUser = await request
-    //   .post('/users/register')
-    //   .set('Content-Type', 'application/json')
-    //   .send({
-    //     _id: "617a814139e6234bb0f7af30",
-    //     username: "admuser",
-    //     firstname: "User",
-    //     lastname: "Admin",
-    //     email: "admuser@test.com",
-    //     phone: "07078923456",
-    //     password: "admuser123",
-    //     confirmPassword: "admuser123",
-    //     role: "normal",
-    //   })
-    //   ;
-    //   console.log('admUser.body.data', admUser.body.data);
-
-    // const { id: admUserId, verifyToken } = admUser.body.data;
-
-    // // Verify account
-    // const verifiedAdminUser = await request
-    //   .post('/users/'+ admUserId +'/verify/'+ verifyToken )
-    //   .set('Content-Type', 'application/json')
-    //   ;
-    //   const { _id: verifiedAdminUserId } = verifiedAdminUser.body.data;
-    //   console.log(verifiedAdminUserId, 'verifiedAdminUser.body.data', verifiedAdminUser.body.data);
-
-    // // Update to Admin User
-    // updatedAdmUser = await request
-    //   .put('/admins/new/'+ verifiedUserId )
-    //   .set('Content-Type', 'application/json')
-    //   ;
-    //   console.log('updatedAdmUser.body.data', updatedAdmUser.body.data);
-    //   console.log(admUserId, verifiedUserId, updatedAdmUser.body.data);
-
-    // // Login attempt on creating account
-    // admUser = await request
-    //   .post('/users/login')
-    //   .set('Content-Type', 'application/json')
-    //   .send({
-    //     email: 'admuser',// 'admuser@test.com',
-    //     password: 'admuser123'
-    //   })
-    //   ;
-    //   console.log(admUser.body.data);
-
-    //   //...
-    // const { token } = admUser.body.data;
-    
-    const { token } = user.body.data;
+    // Logged in as an Admin User
+    const { token: adminToken } = user.body.data;
     const response = await request
       .post('/categories/')
-      .set('Authorization', token)
+      .set('Authorization', adminToken)
       .set('Content-Type', 'application/json')
       .send(categoryMock.fullDetails)
       ;
@@ -145,10 +93,10 @@ describe("POST /categories/", () => {
 describe("PUT /categories/:id", () => {
   it("should update a category", async () => {
   
-    const { token } = user.body.data;
+    const { token: adminToken } = user.body.data;
     const category = await request
       .post('/categories/')
-      .set('Authorization', token)
+      .set('Authorization', adminToken)
       .set('Content-Type', 'application/json')
       .send(categoryMock.fullDetails)
       ;
@@ -156,7 +104,7 @@ describe("PUT /categories/:id", () => {
 
     const response = await request
       .put('/categories/' + categoryId)
-      .set('Authorization', token)
+      .set('Authorization', adminToken)
       .set('Content-Type', 'application/json')
       .send(categoryMock.updatedDetails)
       ;
@@ -172,10 +120,10 @@ describe("PUT /categories/:id", () => {
 describe ("DELETE /categories/:id", () => {
   it('should delete a category', async ()=>{
   
-    const { token } = user.body.data;
+    const { token: adminToken } = user.body.data;
     const category = await request
       .post('/categories/')
-      .set('Authorization', token)
+      .set('Authorization', adminToken)
       .set('Content-Type', 'application/json')
       .send(categoryMock.fullDetails)
       ;
@@ -183,7 +131,7 @@ describe ("DELETE /categories/:id", () => {
 
     const res = await request
       .delete('/categories/' + categoryId)
-      .set('Authorization', token)
+      .set('Authorization', adminToken)
       ;
     expect(res.status).toBe(200);
     expect(res.body.status).toBe("success");
