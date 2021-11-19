@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 
 const { Schema, model, SchemaTypes } = mongoose
 
-const cartSchema = new Schema({
+const addressSchema = new Schema({
     userId: {
       type: SchemaTypes.ObjectId,
       ref: 'user',
@@ -16,3 +16,5 @@ const cartSchema = new Schema({
     lng: Number,
     
 })
+
+export const address = model ('Address', addressSchema)

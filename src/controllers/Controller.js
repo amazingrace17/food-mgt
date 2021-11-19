@@ -1,6 +1,6 @@
 
 import {Category} from '../models/Category.js'
-import {Item} from '../models/Item.js'
+import {Item} from '../models/Product.js'
 import { Seller } from '../models/Seller.js'; 
 
 

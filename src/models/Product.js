@@ -16,7 +16,7 @@ const itemSchema = new Schema({
     },
     imageUrl:{
         type:String,
-        required:true,
+        // required:true,
     },
     Slashedprice:{
         type:Number,
