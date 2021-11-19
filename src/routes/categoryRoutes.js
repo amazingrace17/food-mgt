@@ -13,6 +13,7 @@ router.route('/')
 router.route('/:id')
     .get(CategoryController.getCategoryById)
     .put([authValidator, isAdmin], CategoryController.updateCategory)
-    .delete([authValidator, isAdmin], CategoryController.deleteCategory);
+    .delete([authValidator, isAdmin], CategoryController.deleteCategory)
+    ;
 
 export default router;
