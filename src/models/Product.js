@@ -2,13 +2,20 @@ import mongoose from 'mongoose'
 
 const {Schema, model} = mongoose
 
-const itemSchema = new Schema({
+const productSchema = new Schema({
     title: {
         type:String,
         required:true,
     },
     description:{
         type:String,
+        
+    },
+    
+    category:{
+        type: Schema.Types.ObjectId,
+        ref:'category',
+    //     required:true,
         
     },
     tags:{
@@ -25,15 +32,15 @@ const itemSchema = new Schema({
     Price:{
         type:Number,
     },
-    creator:{
-        type: Schema.Types.ObjectId,
-        ref:'Seller',
-        required:true,
-    },
+    // creator:{
+    //     type: Schema.Types.ObjectId,
+    //     ref:'Seller',
+    //     required:true,
+    // },
     
 },
 {
     timestamps:true
 },
 )
-export const Item = model('item', itemSchema)
+export const Product = model('product', productSchema)

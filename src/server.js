@@ -12,7 +12,7 @@ app.get('/', (req, res) => {
   res.json({
     status: 'success',
     message: 'Welcome to Our Food Management API.',
-    description: 'Stutern 1.0 Inter-track Group 5 Project (Backend).',
+    description: 'Stutern 1.0 Inter-track Group 4 Project (Backend).',
     contributors: ['Tolulope Arinola', 'Anthony Ayeni'],
     members: {
       uiux: ['Kareem Johnbelieve', 'Assumpta Chukwu', 'Thami Frama'],
