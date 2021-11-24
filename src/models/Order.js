@@ -26,8 +26,9 @@ const orderSchema = new Schema({
           required:true,
       },
       address:{
-          type:Object,
+          type:Schema.Types.ObjectId,
           required:true,
+          ref:address
       },
       name: {
         type: String,

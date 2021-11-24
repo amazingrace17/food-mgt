@@ -1,18 +1,18 @@
 import mongoose from 'mongoose'
 
-const {Schema, model} = mongoose
+const {Schema, model , SchemaTypes} = mongoose
 
 const cartSchema = new Schema({
     
         userId: {
-          type: SchemaTypes.ObjectId(),
+            type: SchemaTypes.ObjectId,
           ref: 'user',
           required: true,
         },
         items: [
           {
             productId: {
-              type: SchemaTypes.ObjectId(),
+              type: SchemaTypes.ObjectId,
               ref: 'product',
             },
             name: {

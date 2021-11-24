@@ -1,12 +1,19 @@
 import nodemailer from 'nodemailer'
 
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: 'devprojects75@gmail.com',
-    pass: ''
-  }
-});
+// const transporter = nodemailer.createTransport({
+//   service: 'gmail',
+//   auth: {
+//     user: 'devprojects75@gmail.com',
+//     pass: ''
+//   }
+// });
+const transporter = nodemailer.createTransport(
+  sendgridTransport({
+    auth: {
+      api_key: process.env.SENDGRID_KEY,
+    },
+  })
+);
 
 const mailOptions = {
   from: 'devprojects75@gmail.com',
@@ -58,5 +65,24 @@ export default MailService;
 //          console.log('Message sent!!! ');
 //     }
 // }
+// try(savedUser) => {
+//   transporter.sendMail({
+//     to: email,
+//     from: "YOUR_SENDGRID_VERIFIED_EMAIL",
+//     subject: "Verify your Account on FoodHub",
+//     html: `
+//                   <p>Please verify your email by clicking on the link below - FoodHub</p>
+//                   <p>Click this <a href="http://localhost:3002/auth/verify/${token}">link</a> to verify your account.</p>
+//                 `,
+//   });
+//   res.status(201).json({
+//     message:
+//       "User signed-up successfully, please verify your email before logging in.",
+//     userId: savedUser._id,
+//   });
+// })catch((err) => {
+//   if (!err.statusCode) err.statusCode = 500;
+//   next(err);
+// });
 
 

@@ -1,5 +1,5 @@
 
-import {Cart} from '../model/CartModel.js'
+import {Cart} from '../models/Cart.js'
 
 const CartController = {
     createCart: async (req, res) => {
@@ -105,7 +105,7 @@ const CartController = {
 
 }
 
-export const CartController
+export default CartController
   
   
   
