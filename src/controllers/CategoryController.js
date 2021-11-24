@@ -2,7 +2,7 @@ import { Category } from '../models/Category.js';
 
 const CategoryController = {
   createCategory: async (req, res) => {
-    const { name, description } = req.body;
+    const { name, description} = req.body;
 
     try {
       if (!name || !description) {

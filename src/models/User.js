@@ -37,6 +37,7 @@ const userSchema = new Schema({
     validate: [isInt, 'Please enter a valid phone number'],
     trim: true
   },
+  
   password: {
     type: String,
     required: [true, 'Please enter a password']
@@ -50,7 +51,7 @@ const userSchema = new Schema({
   accountVerifyTokenExpiration: Date,
   isVerified: {
     type: Boolean,
-    default: false,
+    default: true,//false, // change back to 'false' when email config is working
   },
   profileImg: String
 },

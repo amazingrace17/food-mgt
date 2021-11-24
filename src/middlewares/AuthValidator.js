@@ -1,6 +1,8 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
+
+
 //initialize env
 dotenv.config();
 
@@ -44,7 +46,7 @@ const authValidator = async(req, res, next) => {
         error: "invalid auth token"
       });
     }
-
+     
     // Add user's details to the req object for all protected routes
     req.user = {
       id: decodedToken.user._id,

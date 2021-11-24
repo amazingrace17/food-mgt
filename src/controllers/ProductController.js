@@ -1,13 +1,11 @@
-import { Product } from '../model/Product.js';
+import { Product } from '../models/Product.js';
 import pagination from '../services/pagination.js';
 
 const ProductController = {
   createProduct: async (req, res) => {
-    const { name, description, category, subcategory, productImage, price, inventoryCount } =
-      req.body;
+    const { name, description, category, subcategory, imageUrl, price, slashedPrice, inventoryCount } = req.body;
     
-    // const { name, description, category, subcategory, productImage, price, inventoryCount } = req.body;
-    const reqFields = ['name', 'description', 'category', 'subcategory', 'price', 'inventoryCount'];
+    const reqFields = ['name', 'description', 'category', 'subcategory', 'price', 'slashedPrice', 'inventoryCount'];
 
     for (const field of reqFields) {
       if (!req.body[field] ) {
@@ -80,8 +78,8 @@ const ProductController = {
 
   updateProduct: async (req, res) => {
     const { productId } = req.params;
-    // const { name, description, category, subcategory, productImage, price, inventoryCount } = req.body;
-    const reqFields = ['name', 'description', 'category', 'subcategory', 'price', 'inventoryCount'];
+    // const { name, description, category, subcategory, imageUrl, price, slashedPrice, inventoryCount } = req.body;
+    const reqFields = ['name', 'description', 'category', 'subcategory', 'price', 'slashedPrice', 'inventoryCount'];
 
     for (const field of reqFields) {
       if (!req.body[field] ) {
@@ -134,6 +132,48 @@ const ProductController = {
           message: 'server err', 
           err 
         });
+    }
+  },
+
+  createOrder: async(req,res) => {
+    const {userId, product, bill} = req.body;
+    if(!userId || !product || !bill){
+      return res 
+      .status(400)
+      .json({status: 'fail', message : 'something went wrong'});
+
+    }
+    return res
+    .status(201)
+    .json({
+      status:'success' , message: 'successful', data: order
+    })
+  },
+
+  getOrder: async(req,res) => {
+    const Page_size = 20;
+    let page = 1;
+    let skip;
+    if (req.query.page){
+        page = Number(req.query.page);
+        skip= (page -1 ) * Page_size;
+    }
+    try{
+      const order=  await Order. find({}).populate().lean().exec();
+      const docCount = await Order.find({}).countDocuments();
+      return res.status(201).json({
+        status: ' success',
+        message : 'successful',
+        data : order, 
+        documentCount:docCount,
+        totalPages : Math.ceil(docCount/Page_size),
+        nextPage: Math.ceil(docCount/Page_size) > page ? `${page + 1}` : null,
+      });
+    }
+    catch(err){
+      return res
+      .status(500)
+      .json({status : 'fail', message : 'server err', err})
     }
   }
 };

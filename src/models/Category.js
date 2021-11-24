@@ -12,7 +12,7 @@ const categorySchema = new Schema(
     description: {
         type: String
     }
-  },
+  },{timestamps: true}
 );
 
 export const Category = model('category', categorySchema);

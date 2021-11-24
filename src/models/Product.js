@@ -22,7 +22,10 @@ const productSchema = new Schema(
       ref: 'subcategory',
       required: true,
     },
-    productImage: {
+    tags:{
+        type:String,
+    },
+    imageUrl: {
       type: String,
     },
     price: {
@@ -32,6 +35,10 @@ const productSchema = new Schema(
     inventoryCount: {
       type: Number,
       required: true,
+    },
+    slashedPrice:{
+        type:Number,
+        required:true,
     },
     dateAdded: {
       type: Date,
