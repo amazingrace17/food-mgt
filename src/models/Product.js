@@ -32,13 +32,13 @@ const productSchema = new Schema(
       type: Number,
       required: true,
     },
-    inventoryCount: {
-      type: Number,
-      required: true,
-    },
-    slashedPrice:{
+    discount:{
         type:Number,
         required:true,
+    },
+    stock: {
+      type: Number,
+      required: true,
     },
     dateAdded: {
       type: Date,

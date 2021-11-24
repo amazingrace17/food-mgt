@@ -1,19 +1,26 @@
 import { Product } from '../models/Product.js';
 import pagination from '../services/pagination.js';
+import emptyFields from '../services/emptyFields.js';
 
 const ProductController = {
   createProduct: async (req, res) => {
-    const { name, description, category, subcategory, imageUrl, price, slashedPrice, inventoryCount } = req.body;
+    const { name, description, category, subcategory, imageUrl, price, discount, stock } = req.body;
     
-    const reqFields = ['name', 'description', 'category', 'subcategory', 'price', 'slashedPrice', 'inventoryCount'];
+    const reqFields = ['name', 'description', 'category', 'subcategory', 'price', 'discount', 'stock'];
+    // emptyFields(req, res, reqFields);
+    let emptyFlds = [];
 
     for (const field of reqFields) {
       if (!req.body[field] ) {
-        return res.status(400).json({ 
-          status: 'failed', 
-          message: `${field} field is required` 
-        });
+        emptyFlds.push(field);
       }
+    }
+
+    if (emptyFlds.length > 0) {
+      return res.status(400).json({ 
+        status: 'failed', 
+        message: `The following fields: '${emptyFlds.join(', ')}' are required` 
+      });
     }
 
     try {
@@ -39,10 +46,13 @@ const ProductController = {
   getProduct: async (req, res) => {
 
     try {
-      const product = await Product.find({}).populate('category', 'name').exec();
+      const product = await Product.find({})
+        .populate('category', 'name')
+        .populate('subcategory', 'name')
+        .exec();
       const pgn = await pagination(req, 1, Product);
       
-      return res.status(201).json({
+      return res.status(200).json({
         status: 'success',
         message: 'successful',
         data: product,
@@ -60,13 +70,21 @@ const ProductController = {
   },
 
   getProductById: async (req, res) => {
-    const { productId } = req.params;
+    const { id } = req.params;
     try {
-      const product = await Product.findOne({_id: productId})
+      const product = await Product.findById(id)
         .populate('category', 'name')
+        .populate('subcategory', 'name')
         .exec();
+      if(!product) {
+        return res.status(404).json({ 
+          status: "failed", 
+          message: "product not found" 
+        });
+      }
+
       return res
-        .status(201)
+        .status(200)
         .json({ status: 'success', message: 'successful', data: product });
     } catch (err) {
       return res
@@ -77,22 +95,28 @@ const ProductController = {
   },
 
   updateProduct: async (req, res) => {
-    const { productId } = req.params;
-    // const { name, description, category, subcategory, imageUrl, price, slashedPrice, inventoryCount } = req.body;
-    const reqFields = ['name', 'description', 'category', 'subcategory', 'price', 'slashedPrice', 'inventoryCount'];
+    const { id } = req.params;
+    
+    const reqFields = ['name', 'description', 'category', 'subcategory', 'price', 'discount', 'stock'];
+    // emptyFields(req, res, reqFields);
+    let emptyFlds = [];
 
     for (const field of reqFields) {
       if (!req.body[field] ) {
-        return res.status(400).json({ 
-          status: 'failed', 
-          message: `${field} field is required` 
-        });
+        emptyFlds.push(field);
       }
+    }
+
+    if (emptyFlds.length > 0) {
+      return res.status(400).json({ 
+        status: 'failed', 
+        message: `The following fields: '${emptyFlds.join(', ')}' are required` 
+      });
     }
 
     try { 
       const product = await Product.findByIdAndUpdate(
-        productId,
+        id,
         req.body,
         { new: true }
       ); 
@@ -113,10 +137,16 @@ const ProductController = {
   },
 
   deleteProduct: async (req, res) => {
-    const { productId } = req.params;
+    const { id } = req.params;
 
     try {
-      const product = await Product.findById(productId);
+      const product = await Product.findById(id);
+      if(!product) {
+        return res.status(404).json({ 
+          status: "failed", 
+          message: "product not found" 
+        });
+      }
       product.deleteOne();
 
       return res.status(200).json({ 
