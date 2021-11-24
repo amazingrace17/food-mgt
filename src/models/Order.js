@@ -26,8 +26,9 @@ const orderSchema = new Schema({
           required:true,
       },
       address:{
-          type:Object,
+          type:Schema.Types.ObjectId,
           required:true,
+          ref:address
       },
       name: {
         type: String,
@@ -44,15 +45,8 @@ const orderSchema = new Schema({
         type: Number,
         required: true,
       },
-      name: {
-        type: String,
-        required: true,
-      },
-      sellerId: {
-        type: Schema.Types.ObjectId,
-        required: true,
-        ref: "Seller",
-      },
+      
+      
 
   }
 },{ timestamps: true }

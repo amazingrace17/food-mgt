@@ -37,6 +37,7 @@ const userSchema = new Schema({
     validate: [isInt, 'Please enter a valid phone number'],
     trim: true
   },
+  
   password: {
     type: String,
     required: [true, 'Please enter a password']

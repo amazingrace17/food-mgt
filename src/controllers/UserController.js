@@ -8,6 +8,14 @@ import { User } from '../models/User.js';
 
 dotenv.config();
 
+const transporter = nodemailer.createTransport(
+  sendgridTransport({
+    auth: {
+      api_key: process.env.SENDGRID_KEY,
+    },
+  })
+);
+
 const UserController = {
   generateSha256Hash: async (userEmail) => {
     const sha256Hash = crypto.createHash('sha256');
@@ -74,6 +82,20 @@ const UserController = {
         const savedUser = await newUser.save();
 
         if(savedUser) {
+          transporter.sendMail({
+            to: email,
+            from: "YOUR_SENDGRID_VERIFIED_EMAIL",
+            subject: "Verify your Account on Food Bargain",
+            html: `
+                          <p>Please verify your email by clicking on the link below - FoodHub</p>
+                          <p>Click this <a href="http://localhost:5000/auth/verify/${token}">link</a> to verify your account.</p>
+                        `,
+          });
+          res.status(201).json({
+            message:
+              "User signed-up successfully, please verify your email before logging in.",
+            userId: savedUser._id,
+          })
           /**
            * ❌ Send Verification email HERE...
            */
