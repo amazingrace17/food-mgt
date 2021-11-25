@@ -8,5 +8,5 @@ it('get route', async () => {
   expect(200);
   expect(response.body.status).toBe('success');
   expect(response.body.message).toBe('Welcome to Our Food Management API.');
-  expect(response.body.description).toBe('Stutern 1.0 Inter-track Group 5 Project (Backend).');
+  expect(response.body.description).toBe('Stutern 1.0 Inter-track Group 4 Project (Backend).');
 });

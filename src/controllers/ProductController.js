@@ -28,6 +28,8 @@ const ProductController = {
       //res.body.image = url
       const newProduct = new Product(req.body);
       const product = await newProduct.save();
+      // ...
+
       if (!product) {
         return res
           .status(400)
@@ -40,6 +42,37 @@ const ProductController = {
       return res
         .status(500)
         .json({ status: 'fail', message: 'server err', err });
+    }
+  },
+
+  setProductImage: async (req, res) => {
+    const { id } = req.params;
+    
+    console.log(req.body.imageUrl, req.body, req.file);
+    if(!req.file) {
+      return res.status(400).json({
+        status: "Failed",
+        message: "Please select a picture to upload"
+      })
+    }
+
+    try {
+      const data = await Product.findByIdAndUpdate(
+        { _id: id },
+        { imageUrl: req.file.path },
+        { new: true }
+      );
+
+      return res.status(200).json({
+        data,
+        status: "Success",
+        message: "Product image uploaded successfully!"
+      })
+    } catch (error) {
+      res.status(500).json({
+        status: "Failed",
+        message: error.message
+      })  
     }
   },
 
