@@ -6,7 +6,14 @@ const ProductController = {
   createProduct: async (req, res) => {
     const { name, description, category, subcategory, imageUrl, price, discount, stock } = req.body;
     
-    const reqFields = ['name', 'description', 'category', 'subcategory', 'price', 'discount', 'stock'];
+    /* 
+    if(!req.file) {
+      return res.status(400).json({
+        status: "Failed",
+        message: "Please select a product image to upload"
+      })
+    } */
+    const reqFields = ['name', 'description', 'category', 'subcategory', /* 'imageUrl', */ 'price', 'discount', 'stock'];
     // emptyFields(req, res, reqFields);
     let emptyFlds = [];
 
@@ -24,17 +31,20 @@ const ProductController = {
     }
 
     try {
-      //TODO send image to cloudinary ==> image url
-      //res.body.image = url
       const newProduct = new Product(req.body);
       const product = await newProduct.save();
-      // ...
 
       if (!product) {
         return res
           .status(400)
           .json({ status: 'fail', message: 'something went wrong' });
       }
+      /* 
+      // Upload product image
+      // this.setProductImage();
+      product.imageUrl = req.file.path;
+      product.save(); */
+
       return res
         .status(201)
         .json({ status: 'success', message: 'successful', data: product });
@@ -48,11 +58,10 @@ const ProductController = {
   setProductImage: async (req, res) => {
     const { id } = req.params;
     
-    console.log(req.body.imageUrl, req.body, req.file);
     if(!req.file) {
       return res.status(400).json({
         status: "Failed",
-        message: "Please select a picture to upload"
+        message: "Please select a product image to upload"
       })
     }
 
@@ -130,7 +139,7 @@ const ProductController = {
   updateProduct: async (req, res) => {
     const { id } = req.params;
     
-    const reqFields = ['name', 'description', 'category', 'subcategory', 'price', 'discount', 'stock'];
+    const reqFields = ['name', 'description', 'category', 'subcategory', /* 'imageUrl', */ 'price', 'discount', 'stock'];
     // emptyFields(req, res, reqFields);
     let emptyFlds = [];
 

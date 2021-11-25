@@ -74,7 +74,7 @@ describe("POST /users/register", () => {
 
       expect(response.statusCode).toBe(400);
       expect(response.body.status).toBe("failed");
-      expect(response.body.message).toBe("username 'johndoe' is taken or a user with email 'johndoe@test.com' already exists");
+      expect(response.body.message).toBe("username 'johndoe' or email 'johndoe@test.com' already taken");
     })
   })
 })

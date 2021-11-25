@@ -48,7 +48,7 @@ const UserController = {
         return res
           .status(400).json({ 
             status: 'failed', 
-            message: `username '${username}' is taken or a user with email '${email}' already exists`
+            message: `username '${username}' or email '${email}' already taken`
           });
       }
 

@@ -51,7 +51,7 @@ const userSchema = new Schema({
   accountVerifyTokenExpiration: Date,
   isVerified: {
     type: Boolean,
-    default: true,//false, // change back to 'false' when email config is working
+    default: true, //false, // change back to 'false' when email config is working /** Added 3 errors to users test */
   },
   profileImg: String
 },
