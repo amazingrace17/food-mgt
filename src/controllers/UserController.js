@@ -300,9 +300,34 @@ const UserController = {
     }
   },
 
-  setDP: async (req, res) => {
-    // console.log(req.file);
-    // cloudinary.uploader.uploadq(req.file.original)
+  setProfileImage: async (req, res) => {
+    const { id } = req.params;
+    
+    if(!req.file) {
+      return res.status(400).json({
+        status: "Failed",
+        message: "Please select an image to upload"
+      })
+    }
+
+    try {
+      const data = await User.findByIdAndUpdate(
+        { _id: id },
+        { profileImg: req.file.path },
+        { new: true }
+      );
+
+      return res.status(200).json({
+        data,
+        status: "Success",
+        message: "Profile picture uploaded successfully!"
+      })
+    } catch (error) {
+      res.status(500).json({
+        status: "Failed",
+        message: error.message
+      })  
+    }
   }
 }
 
