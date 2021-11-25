@@ -8,13 +8,13 @@ import { User } from '../models/User.js';
 
 dotenv.config();
 
-const transporter = nodemailer.createTransport(
-  sendgridTransport({
-    auth: {
-      api_key: process.env.SENDGRID_KEY,
-    },
-  })
-);
+// const transporter = nodemailer.createTransport(
+//   sendgridTransport({
+//     auth: {
+//       api_key: process.env.SENDGRID_KEY,
+//     },
+//   })
+// );
 
 const UserController = {
   generateSha256Hash: async (userEmail) => {
@@ -48,7 +48,7 @@ const UserController = {
         return res
           .status(400).json({ 
             status: 'failed', 
-            message: `username '${username}' is taken or a user with email '${email}' already exists`
+            message: `username '${username}' or email '${email}' already taken`
           });
       }
 
@@ -82,21 +82,22 @@ const UserController = {
         const savedUser = await newUser.save();
 
         if(savedUser) {
-          transporter.sendMail({
-            to: email,
-            from: "YOUR_SENDGRID_VERIFIED_EMAIL",
-            subject: "Verify your Account on Food Bargain",
-            html: `
-                          <p>Please verify your email by clicking on the link below - FoodHub</p>
-                          <p>Click this <a href="http://localhost:5000/auth/verify/${token}">link</a> to verify your account.</p>
-                        `,
-          });
-          res.status(201).json({
-            message:
-              "User signed-up successfully, please verify your email before logging in.",
-            userId: savedUser._id,
-          })
           /**
+           * 
+          // transporter.sendMail({
+          //   to: email,
+          //   from: "YOUR_SENDGRID_VERIFIED_EMAIL",
+          //   subject: "Verify your Account on Food Bargain",
+          //   html: `
+          //                 <p>Please verify your email by clicking on the link below - FoodHub</p>
+          //                 <p>Click this <a href="http://localhost:5000/auth/verify/${token}">link</a> to verify your account.</p>
+          //               `,
+          // });
+          // res.status(201).json({
+          //   message:
+          //     "User signed-up successfully, please verify your email before logging in.",
+          //   userId: savedUser._id,
+          // })
            * ❌ Send Verification email HERE...
            */
           // MailService.sendMail();
@@ -299,9 +300,34 @@ const UserController = {
     }
   },
 
-  setDP: async (req, res) => {
-    // console.log(req.file);
-    // cloudinary.uploader.uploadq(req.file.original)
+  setProfileImage: async (req, res) => {
+    const { id } = req.params;
+    
+    if(!req.file) {
+      return res.status(400).json({
+        status: "Failed",
+        message: "Please select an image to upload"
+      })
+    }
+
+    try {
+      const data = await User.findByIdAndUpdate(
+        { _id: id },
+        { profileImg: req.file.path },
+        { new: true }
+      );
+
+      return res.status(200).json({
+        data,
+        status: "Success",
+        message: "Profile picture uploaded successfully!"
+      })
+    } catch (error) {
+      res.status(500).json({
+        status: "Failed",
+        message: error.message
+      })  
+    }
   }
 }
 

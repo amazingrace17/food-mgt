@@ -1,46 +1,52 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 
-const {Schema, model} = mongoose
+const { Schema, model, SchemaTypes } = mongoose;
 
-const productSchema = new Schema({
-    title: {
-        type:String,
-        required:true,
+const productSchema = new Schema(
+  {
+    name: {
+      type: String,
+      required: true,
     },
-    description:{
-        type:String,
-        
+    description: {
+      type: String,
+      required: true,
     },
-    
-    category:{
-        type: Schema.Types.ObjectId,
-        ref:'category',
-    //     required:true,
-        
+    category: {
+      type: SchemaTypes.ObjectId,
+      ref: 'category',
+      required: true,
+    },
+    subcategory: {
+      type: SchemaTypes.ObjectId,
+      ref: 'subcategory',
+      required: true,
     },
     tags:{
         type:String,
     },
-    imageUrl:{
-        type:String,
-        // required:true,
+    imageUrl: {
+      type: String,
     },
-    Slashedprice:{
+    price: {
+      type: Number,
+      required: true,
+    },
+    discount:{
         type:Number,
         required:true,
     },
-    Price:{
-        type:Number,
+    stock: {
+      type: Number,
+      required: true,
     },
-    // creator:{
-    //     type: Schema.Types.ObjectId,
-    //     ref:'Seller',
-    //     required:true,
-    // },
-    
-},
-{
-    timestamps:true
-},
-)
-export const Product = model('product', productSchema)
+    dateAdded: {
+      type: Date,
+      default: Date.now,
+    },
+  },
+
+  { timestamps: true }
+);
+
+export const Product = model('product', productSchema);
