@@ -3,7 +3,10 @@ import CartController from '../controllers/CartController.js';
 
 const router = Router();
 
-router.route('/').post(CartController.createCart).get(CartController.getAllCarts);
-router.route('/:id').put(CartController.updateCarts).delete(CartController.deleteCarts);
+router.route('/')
+  .post(CartController.createCart)
+  .get(CartController.getCart)
+  .delete(CartController.deleteCart)
+  ;
 
 export default router;
