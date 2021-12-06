@@ -7,6 +7,7 @@ import categoryRouter from './categoryRoutes.js';
 import subCategoryRouter from './subCategoryRoutes.js';
 import cartRouter from './cartRouter.js'
 import productRouter from './productRoutes.js'
+import searchRouter from './searchRoutes.js'
 
 const router = express.Router();
 
@@ -21,4 +22,6 @@ router.use('/admins', adminRouter)
 router.use('/categories', categoryRouter)
 router.use('/subcategories', subCategoryRouter)
 router.use('/cart', cartRouter)
+router.use('/search', searchRouter)
+
 export default router;
